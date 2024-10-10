@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="cyan">#202020</color>
+
+    <color name="customBackgroundColor">#1B1A1A</color>
+    <color name="customLightShadowColor">#515151</color>
+    <color name="customDarkShadowColor">#000000</color>
+</resources>
