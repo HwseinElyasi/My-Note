@@ -5,4 +5,6 @@
     <string name="done">Done</string>
     <string name="add_note">add Note</string>
     <string name="title">Title</string>
+    <string name="search">Search</string>
+    <string name="back">Back</string>
 </resources>

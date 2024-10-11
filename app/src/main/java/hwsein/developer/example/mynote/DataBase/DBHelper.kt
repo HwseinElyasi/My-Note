@@ -22,7 +22,8 @@ class DBHelper(
         const val NOTE_DETAIL3 = "detail3"
         const val NOTE_IMAGE = "image"
         const val NOTE_IMAGE2 = "image2"
-        const val NOTE_STATE = "STATE"
+        const val NOTE_DRAWING= "draw"
+        const val NOTE_STATE = "state"
 
         const val TRUE_STATE = "1"
         const val FALSE_STATE = "0"
@@ -38,6 +39,7 @@ class DBHelper(
                 "$NOTE_DETAIL3 TEXT ," +
                 "$NOTE_IMAGE BLOB ," +
                 "$NOTE_IMAGE2 BLOB ," +
+                "$NOTE_DRAWING BLOB ," +
                 "$NOTE_STATE VARCHAR(1))")
     }
 

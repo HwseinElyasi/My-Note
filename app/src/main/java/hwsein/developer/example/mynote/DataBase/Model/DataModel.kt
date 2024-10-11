@@ -8,5 +8,6 @@ data class DataModel(
     var detail3 : String ,
     var image : ByteArray? ,
     var image2 : ByteArray? ,
+    var draw : ByteArray? ,
     val state : String
 )

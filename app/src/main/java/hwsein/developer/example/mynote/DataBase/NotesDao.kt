@@ -41,22 +41,36 @@ class NotesDao(
 
     }
 
-    fun updateRecyclerItem(state : String , value : String) : Boolean{
+    fun updateRecyclerItem(state: String, value: String): Boolean {
 
         val dataBase = db.writableDatabase
-        contentValue.put(DBHelper.NOTE_STATE , value )
+        contentValue.put(DBHelper.NOTE_STATE, value)
         val result = dataBase.update(
-            DBHelper.NOTE_TABLE ,
-            contentValue ,
+            DBHelper.NOTE_TABLE,
+            contentValue,
             "${DBHelper.NOTE_ID} = ?",
             arrayOf(state)
-            )
+        )
 
         dataBase.close()
 
         return result > 0
 
     }
+
+    fun deleteNote(id: Int): Boolean {
+
+        val dataBase = db.writableDatabase
+        val delete = dataBase.delete(
+            DBHelper.NOTE_TABLE,
+            "${DBHelper.NOTE_ID} = ?",
+            arrayOf(id.toString())
+        )
+
+        return delete > 0
+
+    }
+
 
     private fun content(note: DataModel) {
 
@@ -68,12 +82,13 @@ class NotesDao(
         contentValue.put(DBHelper.NOTE_DETAIL3, note.detail3)
         contentValue.put(DBHelper.NOTE_IMAGE, note.image)
         contentValue.put(DBHelper.NOTE_IMAGE2, note.image2)
+        contentValue.put(DBHelper.NOTE_DRAWING, note.image2)
         contentValue.put(DBHelper.NOTE_STATE, note.state)
 
 
     }
 
-    private fun selectForRecycler() : ArrayList<RecyclerData> {
+    private fun selectForRecycler(): ArrayList<RecyclerData> {
 
         val dataForRecycler = ArrayList<RecyclerData>()
 

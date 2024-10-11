@@ -75,5 +75,12 @@ class PenView(
 
     }
 
+    fun clear(){
+
+        path.reset()
+        invalidate()
+
+    }
+
 
 }

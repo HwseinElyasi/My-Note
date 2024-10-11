@@ -50,7 +50,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
-    <SearchView
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edt_search"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -58,8 +58,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/back_recycler_search"
-
-        android:queryHint="search"
+        android:hint="@string/search"
+        android:drawableStart="@drawable/search_ic"
+        android:padding="10dp"
+        android:textColorHint="@color/customLightShadowColor"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

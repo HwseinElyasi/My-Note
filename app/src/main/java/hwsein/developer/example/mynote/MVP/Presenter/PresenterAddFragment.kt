@@ -14,6 +14,7 @@ class PresenterAddFragment(
 
         back()
         saveNewNote()
+        pen()
     }
 
      private fun back(){
@@ -33,6 +34,12 @@ class PresenterAddFragment(
             model.addToHomeFragment()
         )
 
+
+    }
+
+    private fun pen(){
+
+        view.drawPen()
 
     }
 

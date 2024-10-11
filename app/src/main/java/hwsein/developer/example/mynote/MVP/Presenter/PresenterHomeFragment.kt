@@ -15,6 +15,7 @@ class PresenterHomeFragment(
 
         addIcon()
         showRecycler()
+        getRecycleBin()
 
     }
 
@@ -35,6 +36,13 @@ class PresenterHomeFragment(
 
            }
        )
+
+    }
+
+    private fun getRecycleBin(){
+
+        view.goTORecycleBin(model.recycleBin())
+
 
     }
 
