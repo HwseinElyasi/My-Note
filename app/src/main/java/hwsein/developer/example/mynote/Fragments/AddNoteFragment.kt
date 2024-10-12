@@ -1,6 +1,7 @@
 package hwsein.developer.example.mynote.Fragments
 
 import android.os.Bundle
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class AddNoteFragment : Fragment() , Utils {
 
         val presenter = PresenterAddFragment(view ,  ModelAddFragment(context))
         presenter.onCreate()
+
 
         return view.binding.root
 

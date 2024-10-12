@@ -2,22 +2,21 @@ package hwsein.developer.example.mynote.MVP.View
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import hwsein.developer.example.mynote.DataBase.DBHelper
 import hwsein.developer.example.mynote.DataBase.Model.DataModel
 import hwsein.developer.example.mynote.DataBase.NotesDao
-import hwsein.developer.example.mynote.R
 import hwsein.developer.example.mynote.Utlis.Utils
 import hwsein.developer.example.mynote.databinding.AddNoteFragmentBinding
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 @Suppress("UNUSED_EXPRESSION")
@@ -46,7 +45,7 @@ class ViewAddNoteFragment(
         binding.viewDone.setOnClickListener {
 
             val title = binding.edtTitle.text.toString()
-            val detail = binding.editText1.text.toString()
+            val detail = binding.detail.text.toString()
             val detail2 = binding.appCompatEditText2.text.toString()
             val detail3 = binding.edtEnd.text.toString()
             val img = convertImage(binding.img1)
@@ -109,6 +108,34 @@ class ViewAddNoteFragment(
 
     }
 
+    fun updateNote(){
+
+        val shared = context?.getSharedPreferences("pref" , Context.MODE_PRIVATE)
+        val id = shared?.getInt("id" , 0)
+        val type = shared?.getBoolean("newnote" , false)
+
+        NotesDao(db).findAllNote(id)
+
+        val dao =  NotesDao(db)
+
+        if (type == false){
+
+            val notes = dao.findAllNote(id)
+            val editable = Editable.Factory()
+            binding.edtTitle.text = editable.newEditable(notes.title)
+            binding.detail.text = editable.newEditable(notes.detail)
+            binding.textView.text= editable.newEditable(notes.detail2)
+            binding.edtEnd.text = editable.newEditable(notes.detail3)
+            binding.img1.setImageBitmap(byteArrayToBitmap(notes.image))
+            binding.img2.setImageBitmap(byteArrayToBitmap(notes.image2))
+            binding.edtEnd.text = editable.newEditable(notes.detail3)
+
+        }
+
+
+    }
+
+
     private fun convertImage(view: ImageView): ByteArray {
 
 
@@ -164,7 +191,7 @@ class ViewAddNoteFragment(
     private fun enabledDrawingMode() {
 
         binding.edtTitle.isEnabled = false
-        binding.editText1.isEnabled = false
+        binding.detail.isEnabled = false
         binding.edtEnd.isEnabled = false
         binding.img1.isEnabled = false
         binding.img2.isEnabled = false
@@ -179,7 +206,7 @@ class ViewAddNoteFragment(
     private fun disableDrawingMode() {
 
             binding.edtTitle.isEnabled = true
-            binding.editText1.isEnabled = true
+            binding.detail.isEnabled = true
             binding.edtEnd.isEnabled = true
             binding.img1.isEnabled = true
             binding.img2.isEnabled = true
@@ -188,6 +215,12 @@ class ViewAddNoteFragment(
             binding.imgDone.visibility = View.GONE
             binding.penview.visibility = View.INVISIBLE
 
+
+    }
+
+    private fun byteArrayToBitmap(byteArray: ByteArray?) : Bitmap? {
+
+        return BitmapFactory.decodeByteArray(byteArray , 0 , byteArray?.size!!)
 
     }
 

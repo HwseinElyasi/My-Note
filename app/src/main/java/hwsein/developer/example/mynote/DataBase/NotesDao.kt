@@ -12,7 +12,7 @@ class NotesDao(
 
     private val contentValue = ContentValues()
     private lateinit var cursor: Cursor
-    private val data = ArrayList<DataModel>()
+
 
 
     fun saveNotes(note: DataModel): Boolean {
@@ -66,9 +66,23 @@ class NotesDao(
             "${DBHelper.NOTE_ID} = ?",
             arrayOf(id.toString())
         )
+        dataBase.close()
 
         return delete > 0
 
+    }
+
+    fun findAllNote(id: Int?) : DataModel {
+
+        val dataBase = db.readableDatabase
+        val query = "SELECT * FROM ${DBHelper.NOTE_TABLE} WHERE ${DBHelper.NOTE_ID} = ?"
+        cursor = dataBase.rawQuery(query, arrayOf(id.toString()))
+        val data = selectAll()
+
+        cursor.close()
+        dataBase.close()
+
+        return data
     }
 
 
@@ -114,6 +128,30 @@ class NotesDao(
 
         return dataForRecycler
 
+    }
+
+     fun selectAll() : DataModel {
+
+         val byte = ByteArray(0)
+
+         val data = DataModel(0 , "" , "" , "" , "" , byte, byte , byte , "" )
+
+        if (cursor.moveToFirst()) {
+
+                data.id = cursor.getInt(getColumn(DBHelper.NOTE_ID))
+            data.title = cursor.getString(getColumn(DBHelper.NOTE_TITLE))
+            data.detail = cursor.getString(getColumn(DBHelper.NOTE_DETAIL))
+            data.detail2 = cursor.getString(getColumn(DBHelper.NOTE_DETAIL2))
+            data.detail3 = cursor.getString(getColumn(DBHelper.NOTE_DETAIL3))
+            data.image = cursor.getBlob(getColumn(DBHelper.NOTE_IMAGE))
+            data.image2 = cursor.getBlob(getColumn(DBHelper.NOTE_IMAGE2))
+            data.draw = cursor.getBlob(getColumn(DBHelper.NOTE_DRAWING))
+            data.state = cursor.getString(getColumn(DBHelper.NOTE_STATE))
+
+        }
+
+
+        return data
     }
 
     private fun getColumn(name: String) = cursor.getColumnIndex(name)

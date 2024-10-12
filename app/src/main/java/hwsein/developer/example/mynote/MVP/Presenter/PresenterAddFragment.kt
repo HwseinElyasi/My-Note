@@ -15,6 +15,7 @@ class PresenterAddFragment(
         back()
         saveNewNote()
         pen()
+        updateNOte()
     }
 
      private fun back(){
@@ -40,6 +41,12 @@ class PresenterAddFragment(
     private fun pen(){
 
         view.drawPen()
+
+    }
+
+    private fun updateNOte(){
+
+        view.updateNote()
 
     }
 

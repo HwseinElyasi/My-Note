@@ -2,7 +2,9 @@ package hwsein.developer.example.mynote.Adapter.Recycler
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -11,18 +13,22 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.Toast
 import androidx.core.graphics.translationMatrix
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import hwsein.developer.example.mynote.DataBase.DBHelper
 import hwsein.developer.example.mynote.DataBase.Model.DataModel
 import hwsein.developer.example.mynote.DataBase.NotesDao
+import hwsein.developer.example.mynote.Fragments.AddNoteFragment
+import hwsein.developer.example.mynote.Utlis.Utils
 import hwsein.developer.example.mynote.databinding.ListItemBinding
 
 class RecyclerNotes(
     private val notes: ArrayList<RecyclerData>,
-    private val context: Context?
-) : RecyclerView.Adapter<RecyclerNotes.NoteViewHolder>() , Filterable {
+    private val context: Context?,
+    private val util: Utils
+) : RecyclerView.Adapter<RecyclerNotes.NoteViewHolder>(), Filterable {
 
     val db = DBHelper(context)
 
@@ -84,6 +90,16 @@ class RecyclerNotes(
 
             }
 
+            binding.root.setOnClickListener {
+
+                util.replaceFragment(AddNoteFragment())
+                val shared = context?.getSharedPreferences("pref" , Context.MODE_PRIVATE)
+                val edit = shared?.edit()
+                edit?.putInt("id" , data.id)
+                edit?.apply()
+
+            }
+
         }
 
     }
@@ -96,18 +112,17 @@ class RecyclerNotes(
 
     }
 
-    override fun getFilter(): Filter  =
-        object : Filter(){
+    override fun getFilter(): Filter =
+        object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
 
                 val filterList = ArrayList<RecyclerData>()
 
                 if (constraint.isNullOrEmpty())
                     filterList.addAll(newData)
-
                 else {
                     val text = constraint.toString().trim()
-                    for (item in newData){
+                    for (item in newData) {
                         if (item.title.contains(text))
                             filterList.add(item)
                     }
