@@ -58,6 +58,21 @@ class NotesDao(
 
     }
 
+    fun updateAll(id : Int ,note : DataModel) : Boolean {
+
+        val database = db.writableDatabase
+        content(note)
+        val result = database.update(
+            DBHelper.NOTE_TABLE ,
+            contentValue ,
+            "${DBHelper.NOTE_ID} = ?",
+            arrayOf(id.toString())
+        )
+        database.close()
+
+        return result > 0
+    }
+
     fun deleteNote(id: Int): Boolean {
 
         val dataBase = db.writableDatabase
@@ -130,7 +145,7 @@ class NotesDao(
 
     }
 
-     fun selectAll() : DataModel {
+     private fun selectAll() : DataModel {
 
          val byte = ByteArray(0)
 

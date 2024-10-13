@@ -92,11 +92,15 @@ class RecyclerNotes(
 
             binding.root.setOnClickListener {
 
-                util.replaceFragment(AddNoteFragment())
+
                 val shared = context?.getSharedPreferences("pref" , Context.MODE_PRIVATE)
                 val edit = shared?.edit()
                 edit?.putInt("id" , data.id)
+                edit?.putBoolean("recycle" , false)
                 edit?.apply()
+
+
+                util.replaceFragment(AddNoteFragment())
 
             }
 

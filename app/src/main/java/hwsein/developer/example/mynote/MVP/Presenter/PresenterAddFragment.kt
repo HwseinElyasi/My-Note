@@ -1,5 +1,6 @@
 package hwsein.developer.example.mynote.MVP.Presenter
 
+import androidx.fragment.app.Fragment
 import hwsein.developer.example.mynote.DataBase.Model.DataModel
 import hwsein.developer.example.mynote.MVP.Model.ModelAddFragment
 import hwsein.developer.example.mynote.MVP.View.ViewAddNoteFragment
@@ -15,7 +16,8 @@ class PresenterAddFragment(
         back()
         saveNewNote()
         pen()
-        updateNOte()
+        findAllInUpdate()
+        updateAll()
     }
 
      private fun back(){
@@ -44,9 +46,28 @@ class PresenterAddFragment(
 
     }
 
-    private fun updateNOte(){
+    private fun findAllInUpdate(){
 
-        view.updateNote()
+       view.findAllItem(
+           object : Utils{
+               override fun findAll(id: Int?): DataModel {
+                 return  model.findAll(id!!)
+               }
+           }
+       )
+
+    }
+
+    private fun updateAll(){
+
+        view.updateNote(
+            object : Utils{
+                override fun updateAll(id: Int, data: DataModel): Boolean {
+                   return model.updateAllItem(id , data)
+                }
+            } ,
+            model.addToHomeFragment()
+        )
 
     }
 

@@ -22,4 +22,12 @@ class ModelAddFragment(
 
     }
 
+    fun findAll(id : Int) : DataModel{
+
+      return NotesDao(db).findAllNote(id)
+
+    }
+
+    fun updateAllItem(id: Int , data : DataModel) = NotesDao(db).updateAll(id , data)
+
 }

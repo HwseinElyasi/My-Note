@@ -28,9 +28,8 @@ class ViewHomeFragment(
 
             val pref = context?.getSharedPreferences("pref", Context.MODE_PRIVATE)
             val edit = pref?.edit()
-            edit?.putBoolean("newnote", false)
+            edit?.putBoolean("recycle" , true)
             edit?.apply()
-
 
             fragmentAdd.replaceFragment(fragment)
 
@@ -42,7 +41,7 @@ class ViewHomeFragment(
     fun recycler(findRecycle: Utils) {
 
         val adapter =
-            RecyclerNotes(findRecycle.findNotes(DBHelper.TRUE_STATE), context, fragmentAdd)
+            RecyclerNotes(findRecycle.findAllNotes(DBHelper.TRUE_STATE), context, fragmentAdd)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(
             context,

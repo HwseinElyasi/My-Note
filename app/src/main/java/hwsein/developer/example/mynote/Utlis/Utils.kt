@@ -6,12 +6,20 @@ import hwsein.developer.example.mynote.DataBase.Model.DataModel
 
 interface Utils {
 
-    fun replaceFragment(fragment : Fragment){}
+    fun replaceFragment(fragment: Fragment) {}
 
-    fun saveNote(note : DataModel){}
+    fun saveNote(note: DataModel) {}
 
-    fun findNotes(state : String):ArrayList<RecyclerData>{
+    fun findAllNotes(state: String): ArrayList<RecyclerData> {
         return ArrayList()
+    }
+
+    fun findAll(id: Int?): DataModel {
+        return DataModel(0, "", "", "", "", ByteArray(0), ByteArray(0), ByteArray(0), "")
+    }
+
+    fun updateAll(id: Int, data: DataModel): Boolean {
+        return true
     }
 
 }

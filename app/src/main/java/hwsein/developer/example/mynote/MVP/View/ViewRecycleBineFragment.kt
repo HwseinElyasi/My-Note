@@ -19,7 +19,7 @@ class ViewRecycleBineFragment(
 
     fun showRecycleNotes(utils : Utils){
 
-        val adapter = RecycleBInAdapter(utils.findNotes(DBHelper.FALSE_STATE) , context)
+        val adapter = RecycleBInAdapter(utils.findAllNotes(DBHelper.FALSE_STATE) , context)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(
             context ,

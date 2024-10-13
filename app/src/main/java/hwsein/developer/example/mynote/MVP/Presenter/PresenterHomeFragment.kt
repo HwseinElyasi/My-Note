@@ -30,7 +30,7 @@ class PresenterHomeFragment(
 
        view.recycler(
            object : Utils{
-               override fun findNotes(state: String): ArrayList<RecyclerData> {
+               override fun findAllNotes(state: String): ArrayList<RecyclerData> {
                   return model.findNotesInDatabase(state)
                }
 

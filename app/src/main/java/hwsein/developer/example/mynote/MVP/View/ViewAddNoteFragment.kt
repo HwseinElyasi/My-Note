@@ -14,15 +14,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import hwsein.developer.example.mynote.DataBase.DBHelper
 import hwsein.developer.example.mynote.DataBase.Model.DataModel
-import hwsein.developer.example.mynote.DataBase.NotesDao
 import hwsein.developer.example.mynote.Utlis.Utils
 import hwsein.developer.example.mynote.databinding.AddNoteFragmentBinding
 import java.io.ByteArrayOutputStream
 
-@Suppress("UNUSED_EXPRESSION")
 class ViewAddNoteFragment(
     private val context: Context?,
-    private val utils: Utils
+    private val utils: Utils ,
 ) {
 
     val db = DBHelper(context)
@@ -59,19 +57,11 @@ class ViewAddNoteFragment(
 
             if (title.isNotEmpty()) {
                 saveNote.saveNote(newNote)
-                Toast.makeText(
-                    context,
-                    "Your note has been successfully saved.",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+               showToast("Your note has been successfully saved.")
                 utils.replaceFragment(fragment)
 
             } else
-                Toast.makeText(
-                    context,
-                    "The title cannot be empty.", Toast.LENGTH_SHORT
-                ).show()
+                showToast("The title cannot be empty.")
 
         }
 
@@ -101,34 +91,75 @@ class ViewAddNoteFragment(
         binding.viewExit.setOnClickListener {
 
             binding.penview.clear()
-            Toast.makeText(context, "are", Toast.LENGTH_SHORT).show()
 
         }
 
 
     }
 
-    fun updateNote(){
+    fun findAllItem(find : Utils){
 
         val shared = context?.getSharedPreferences("pref" , Context.MODE_PRIVATE)
         val id = shared?.getInt("id" , 0)
-        val type = shared?.getBoolean("newnote" , false)
+        val type = shared?.getBoolean("recycle" , true)
 
-        NotesDao(db).findAllNote(id)
+        if (type == false ){
 
-        val dao =  NotesDao(db)
+            val notes = find.findAll(id)
 
-        if (type == false){
+                val editable = Editable.Factory()
+                binding.edtTitle.text = editable.newEditable(notes.title)
+                binding.detail.text = editable.newEditable(notes.detail)
+                binding.textView.text = editable.newEditable(notes.detail2)
+                binding.edtEnd.text = editable.newEditable(notes.detail3)
+                binding.img1.setImageBitmap(byteArrayToBitmap(notes.image))
+                binding.img2.setImageBitmap(byteArrayToBitmap(notes.image2))
+                binding.edtEnd.text = editable.newEditable(notes.detail3)
+            val bit = byteArrayToBitmap(notes.draw)
 
-            val notes = dao.findAllNote(id)
-            val editable = Editable.Factory()
-            binding.edtTitle.text = editable.newEditable(notes.title)
-            binding.detail.text = editable.newEditable(notes.detail)
-            binding.textView.text= editable.newEditable(notes.detail2)
-            binding.edtEnd.text = editable.newEditable(notes.detail3)
-            binding.img1.setImageBitmap(byteArrayToBitmap(notes.image))
-            binding.img2.setImageBitmap(byteArrayToBitmap(notes.image2))
-            binding.edtEnd.text = editable.newEditable(notes.detail3)
+            if (bit != null)
+            binding.penview.loadDrawing(bit)
+
+
+        }
+
+
+    }
+
+    fun updateNote(find: Utils , fragment: Fragment){
+
+        val shared = context?.getSharedPreferences("pref" , Context.MODE_PRIVATE)
+        val id = shared?.getInt("id" , 0)
+
+        val notes = find.findAll(id)
+
+        binding.viewDone.setOnClickListener {
+
+            val title = binding.edtTitle.text.toString()
+            val detail = binding.detail.text.toString()
+            val detail2 = binding.appCompatEditText2.text.toString()
+            val detail3 = binding.edtEnd.text.toString()
+            val drawingBitmap = binding.penview.getDrawingBitmap()
+            val drawingByteArray = bitmapToByteArray(drawingBitmap)
+
+
+            val newImage1 = if (binding.img1.drawable != null) convertImage(binding.img1)  else notes.image
+            val newImage2 = if (binding.img2.drawable != null) convertImage(binding.img2) else notes.image2
+
+            if ( find.updateAll(id!! , DataModel(
+                    id,
+                    title ,
+                    detail ,
+                    detail2 ,
+                    detail3 ,
+                    newImage1 ,
+                    newImage2,
+                    drawingByteArray,
+                    "1"
+                ))) {
+                showToast("allow update")
+                utils.replaceFragment(fragment)
+            }
 
         }
 
@@ -137,21 +168,18 @@ class ViewAddNoteFragment(
 
 
     private fun convertImage(view: ImageView): ByteArray {
-
-
         val dr = view.drawable
         val stream = ByteArrayOutputStream()
 
         if (dr != null && dr is BitmapDrawable) {
+            val bitMap = dr.bitmap
+            if (bitMap != null) {
+                bitMap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                return stream.toByteArray()
+            }
+        }
 
-            val bitMap = (dr as BitmapDrawable).bitmap
-            bitMap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-
-        } else
-            null
-
-        return stream.toByteArray()
-
+        return ByteArray(0)
     }
 
     private fun convertDrawTOBitMap(view: View): Bitmap {
@@ -166,15 +194,22 @@ class ViewAddNoteFragment(
 
     private fun bitmapToByteArray(bitmap: Bitmap): ByteArray? {
 
-        if (isBitmapEmpty(bitmap)) {
-            return null
+        return if (bitmap != null) {
+
+            val outputStream = ByteArrayOutputStream()
+            val successful = bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+
+            if (successful)
+                outputStream.toByteArray()
+
+            else
+                null
+
+        }else
+            null
+
         }
 
-        val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        return outputStream.toByteArray()
-
-    }
 
     private fun isBitmapEmpty(bitmap: Bitmap): Boolean {
         for (x in 0 until bitmap.width) {
@@ -221,6 +256,12 @@ class ViewAddNoteFragment(
     private fun byteArrayToBitmap(byteArray: ByteArray?) : Bitmap? {
 
         return BitmapFactory.decodeByteArray(byteArray , 0 , byteArray?.size!!)
+
+    }
+
+    private fun showToast(text : String){
+
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 
     }
 

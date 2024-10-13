@@ -1,6 +1,7 @@
 package hwsein.developer.example.mynote.CustomView
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -17,6 +18,7 @@ class PenView(
 
     private var paint = Paint()
     private var path = Path()
+    private var drawingBitmap: Bitmap? = null
 
 
     init {
@@ -83,4 +85,15 @@ class PenView(
     }
 
 
+    fun loadDrawing(bitmap: Bitmap) {
+        drawingBitmap = bitmap
+        invalidate()
+    }
+
+    fun getDrawingBitmap(): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        draw(canvas)
+        return bitmap
+    }
 }
