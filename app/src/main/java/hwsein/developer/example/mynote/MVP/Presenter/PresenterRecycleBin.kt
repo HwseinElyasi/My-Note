@@ -22,7 +22,7 @@ class PresenterRecycleBin(
         view.showRecycleNotes(
             object : Utils{
 
-                override fun findNotes(state: String): ArrayList<RecyclerData> {
+                override fun findAllNotes(state: String): ArrayList<RecyclerData> {
                     return model.findRecycleBin(state)
                 }
 
